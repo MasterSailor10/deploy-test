@@ -58,7 +58,7 @@ class Profile extends Component {
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('user'));
 
-      const response = await axios.put(`https://library-management-system-velocity.onrender.com/${user.id}`,{ name: this.state.name, email: this.state.email },
+      const response = await axios.put(`https://library-management-system-velocity.onrender.com/profile/${user.id}`,{ name: this.state.name, email: this.state.email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
