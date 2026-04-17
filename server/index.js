@@ -8,7 +8,8 @@ const jwt       = require('jsonwebtoken');
 const { User, Book, Borrow, Request } = require('./initDB');
 
 const app = express();
-app.use(cors({origin: "http://deploy-test-xi.vercel.app"}));
+app.use(cors({origin: ["https://deploy-test-xi.vercel.app",
+             "https://deploy-test-qqfpnjov4-siddhartha-singhs-projects-2044651b.vercel.app"]}));
 app.use(express.json());
 
 const MONGO_URI = process.env.MONGO_URI;
