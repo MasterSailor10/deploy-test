@@ -26,12 +26,12 @@ class BookDetail extends Component {
       const user = JSON.parse(localStorage.getItem('user'));
 
       const bookResponse = await axios.get(
-        `http://localhost:5000/books/${id}`,
+        `https://library-management-system-velocity.onrender.com/books/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const borrowResponse = await axios.get(
-        `http://localhost:5000/borrows/user/${user.id}`,
+        `https://library-management-system-velocity.onrender.com/borrows/user/${user.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
