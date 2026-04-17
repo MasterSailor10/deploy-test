@@ -16,7 +16,7 @@ class Dashboard extends Component {
       const user = JSON.parse(localStorage.getItem('user'));
 
       const response = await axios.get(
-        `http://localhost:5000/borrows/user/${user.id}`,
+        `https://library-management-system-velocity.onrender.com/borrows/user/${user.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
