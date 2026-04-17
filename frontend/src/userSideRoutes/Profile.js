@@ -26,7 +26,7 @@ class Profile extends Component {
       const user = JSON.parse(localStorage.getItem('user'));
 
       const response = await axios.get(
-        `http://localhost:5000/profile/${user.id}`,
+        `https://library-management-system-velocity.onrender.com/profile/${user.id}`,
         { 
             headers: 
             { 
