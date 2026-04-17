@@ -1,0 +1,104 @@
+.catalogue {
+  background-color: #f5f5f0;
+  min-height: 100vh;
+}
+
+.catalogue-body {
+  padding: 30px 40px;
+}
+
+.filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.filters input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  height: 30px;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+}
+
+.filters select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  color: #444;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.book-card {
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #e8e8e8;
+}
+
+.book-cover {
+  height: 210px;
+  background-color: #dde1f0;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.book-cover img {
+  height: 200px;
+  align-self: center;
+}
+
+.book-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.book-author {
+  font-size: 12px;
+  color: #888;
+  margin: 0 0 10px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge { font-size: 15px; padding: 3px 8px; border-radius: 4px; }
+.badge.available { background: #e6f4ea; color: #2d7a3a; }
+.badge.borrowed { background: #fdecea; color: #c0392b; }
+
+.view-btn {
+  font-size: 15px;
+  padding: 5px 12px;
+  background-color: #1a1a2e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.book-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.book-link:hover {
+  text-decoration: none;
+}

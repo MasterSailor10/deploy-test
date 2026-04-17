@@ -1,0 +1,82 @@
+.login-page {
+  min-height: 100vh;
+  background-color: #f5f5f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  background: white;
+  padding: 36px 32px;
+  border-radius: 12px;
+  width: 360px;
+  border: 1px solid #e8e8e8;
+}
+
+.login-box h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.login-box .sub {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+.login-box label {
+  display: block;
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  background-color: #fafafa;
+  color: #1a1a2e;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #1a1a2e;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 11px;
+  background-color: #1a1a2e;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.login-box button:hover {
+  background-color: #2d2d4e;
+}
+
+.switch {
+  font-size: 13px;
+  text-align: center;
+  color: #888;
+  margin-top: 16px;
+}
+
+.switch a {
+  color: #e07b39;
+  text-decoration: none;
+  font-weight: 500;
+}

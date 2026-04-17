@@ -1,0 +1,35 @@
+.sidebar {
+  width: 300px;
+  min-height: 100vh;
+  background-color: #1a1a2e;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  color: #e2e2e2;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid #2d2d4e;
+  margin-bottom: 10px;
+}
+
+.sidebar a {
+  color: #b0b0c3;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 11px 20px;
+  transition: background 0.2s;
+}
+
+.sidebar a:hover {
+  background-color: #2d2d4e;
+  color: white;
+}
+
+.logout-link {
+  margin-top: auto;
+  color: #e05c5c !important;
+}

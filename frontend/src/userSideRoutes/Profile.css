@@ -1,0 +1,47 @@
+.profile-page { background-color: #f5f5f0; min-height: 100vh; }
+.profile-body { padding: 36px 40px; max-width: 900px; }
+
+.profile-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #1a1a2e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profile-top h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+.profile-email { font-size: 14px; color: #888; margin: 0; }
+
+.role-tag { font-size: 12px; background: #e8f0fe; color: #1a56c4; padding: 3px 10px; border-radius: 4px; }
+.joined-tag { font-size: 12px; background: #f0f0f5; color: #555; padding: 3px 10px; border-radius: 4px; }
+
+.profile-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+.profile-card { background: white; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; }
+.profile-card h3 { font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 20px; }
+
+.profile-card label { display: block; font-size: 13px; color: #444; margin-bottom: 5px; }
+.profile-card input { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 7px; font-size: 14px; margin-bottom: 16px; box-sizing: border-box; background-color: #fafafa; color: #1a1a2e; }
+.profile-card input:focus { outline: none; border-color: #1a1a2e; }
+.profile-card button { width: 100%; padding: 10px; background-color: #1a1a2e; color: white; border: none; border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.profile-card button:hover { background-color: #2d2d4e; }
+
+.error-msg { background-color: #fdecea; color: #c0392b; padding: 10px 14px; border-radius: 7px; font-size: 13px; margin-bottom: 16px; }
+.success-msg { background-color: #e6f4ea; color: #2d7a3a; padding: 10px 14px; border-radius: 7px; font-size: 13px; margin-bottom: 16px; }
