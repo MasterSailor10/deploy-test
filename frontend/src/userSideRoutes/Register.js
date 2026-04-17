@@ -28,7 +28,7 @@ class Register extends Component {
     const formData = { name, email, date, password, confirmPassword };
 
     try {
-      const response = await axios.post("http://localhost:5000/register", formData);
+      const response = await axios.post("https://library-management-system-velocity.onrender.com/register", formData);
       if (response.status === 201) {
         this.setState({ success: 'Registered Successfully! Redirecting...', error: '' });
         setTimeout(() => {
