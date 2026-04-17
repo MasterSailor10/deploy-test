@@ -48,7 +48,7 @@ class Register extends Component {
       <div className="register-page">
         <div className="register-box">
           <h2>Create account</h2>
-          <p className="sub">Join BookLib today</p>
+          <p className="sub">Join BookLibbbb today</p>
           <form onSubmit={this.handleSubmit}>
             <label>Full name</label>
             <input
