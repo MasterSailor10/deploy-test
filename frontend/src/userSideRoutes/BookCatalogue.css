@@ -2,17 +2,14 @@
   background-color: #f5f5f0;
   min-height: 100vh;
 }
-
 .catalogue-body {
   padding: 30px 40px;
 }
-
 .filters {
   display: flex;
   gap: 14px;
   margin-bottom: 28px;
 }
-
 .filters input {
   flex: 1;
   padding: 10px 14px;
@@ -22,7 +19,6 @@
   font-size: 14px;
   background: white;
 }
-
 .filters select {
   padding: 10px 14px;
   border: 1px solid #ddd;
@@ -31,21 +27,22 @@
   background: white;
   color: #444;
 }
-
 .book-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
-
 .book-card {
   background: white;
   border-radius: 10px;
   padding: 14px;
   border: 1px solid #e8e8e8;
+  /* FIX: prevent card content from overflowing */
+  overflow: hidden;
+  box-sizing: border-box;
 }
-
 .book-cover {
+  width: 100%;                /* FIX: constrain to card width */
   height: 210px;
   background-color: #dde1f0;
   border-radius: 6px;
@@ -53,37 +50,42 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;           /* FIX: clip any image overflow */
 }
-
 .book-cover img {
-  height: 200px;
-  align-self: center;
+  width: 100%;                /* FIX: fill container width */
+  height: 100%;               /* FIX: fill container height */
+  object-fit: cover;          /* FIX: scale without distortion */
 }
-
 .book-title {
-  font-size: 20px;
+  font-size: 14px;            /* FIX: was 20px, too large for grid cards */
   font-weight: 600;
   color: #1a1a2e;
+  margin: 0 0 4px;
+  /* FIX: truncate long titles to one line */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 .book-author {
   font-size: 12px;
   color: #888;
   margin: 0 0 10px;
+  /* FIX: truncate long author names */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
-.badge { font-size: 15px; padding: 3px 8px; border-radius: 4px; }
+.badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; }
 .badge.available { background: #e6f4ea; color: #2d7a3a; }
-.badge.borrowed { background: #fdecea; color: #c0392b; }
-
+.badge.borrowed  { background: #fdecea; color: #c0392b; }
 .view-btn {
-  font-size: 15px;
+  font-size: 12px;
   padding: 5px 12px;
   background-color: #1a1a2e;
   color: white;
@@ -91,14 +93,11 @@
   border-radius: 5px;
   cursor: pointer;
 }
-
-
 .book-link {
   text-decoration: none;
   color: inherit;
   display: block;
 }
-
 .book-link:hover {
   text-decoration: none;
 }
