@@ -13,7 +13,7 @@ class AdminDashboard extends Component {
   componentDidMount = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/admin/stats', {
+      const response = await axios.get('https://library-management-system-velocity.onrender.com/admin/stats', {
         headers: { Authorization: `Bearer ${token}` }
       });
       this.setState({ stats: response.data, loading: false });
