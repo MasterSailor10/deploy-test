@@ -18,7 +18,7 @@ class BookCatalogue extends Component {
         try {
             const token = localStorage.getItem('token');
 
-            const response = await axios.get('https://library-management-system-velocity.onrender.com//books', {
+            const response = await axios.get('https://library-management-system-velocity.onrender.com/books', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
