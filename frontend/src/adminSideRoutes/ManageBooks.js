@@ -36,7 +36,7 @@ class ManageBooks extends Component {
   fetchBooks = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/books', {
+      const response = await axios.get('https://library-management-system-velocity.onrender.com/books', {
         headers: { Authorization: `Bearer ${token}` }
       });
       this.setState({ books: response.data });
@@ -63,7 +63,7 @@ class ManageBooks extends Component {
 
     try {
       if (editId) {
-        await axios.put(`http://localhost:5000/books/${editId}`, bookData, {
+        await axios.put(`https://library-management-system-velocity.onrender.com/books/${editId}`, bookData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.setState({ success: 'Book updated!', error: '' });
@@ -95,7 +95,7 @@ class ManageBooks extends Component {
 
   fetchBooksOnInput = async (search2) => {
     try {
-      const response = await axios.get(`http://localhost:5000/filtered?search2=${search2}`);
+      const response = await axios.get(`https://library-management-system-velocity.onrender.com/filtered?search2=${search2}`);
       this.setState({ books2: response.data, backendBooks: true });
     } catch (err) {
       console.log(err);
