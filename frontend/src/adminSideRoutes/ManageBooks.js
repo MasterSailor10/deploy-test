@@ -63,7 +63,7 @@ class ManageBooks extends Component {
 
     try {
       if (editId) {
-        await axios.put(`http://localhost:5000/books/${editId}`, bookData, {
+        await axios.put(`https://library-management-system-velocity.onrender.com/books/${editId}`, bookData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.setState({ success: 'Book updated!', error: '' });
