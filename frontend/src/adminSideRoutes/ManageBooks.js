@@ -68,7 +68,7 @@ class ManageBooks extends Component {
         });
         this.setState({ success: 'Book updated!', error: '' });
       } else {
-        await axios.post('http://localhost:5000/books', bookData, {
+        await axios.post('https://library-management-system-velocity.onrender.com/books', bookData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.setState({ success: 'Book added!', error: '' });
@@ -83,7 +83,7 @@ class ManageBooks extends Component {
   handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/books/${id}`, {
+      await axios.delete(`https://library-management-system-velocity.onrender.com/books/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       this.setState({ success: 'Book deleted!', error: '' });
