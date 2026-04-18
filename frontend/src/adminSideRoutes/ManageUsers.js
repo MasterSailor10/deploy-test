@@ -12,35 +12,31 @@ class ManageUsers extends Component {
   }
 
   fetchUsers = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/users', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      this.setState({ users: response.data });
-    } catch (err) {
-      console.log(err);
-    }
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:5000/users', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    this.setState({ users: response.data });
+  } catch (err) {
+    console.log(err);
   }
+}
 
-  // FIX: MongoDB stores is_blocked as boolean (true/false), not integer (0/1)
-  toggleBlock = async (id, currentStatus) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(
-        `http://localhost:5000/users/${id}/block`,
-        { is_blocked: !currentStatus },   // FIX: flip the boolean
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      this.setState({
-        success: !currentStatus ? 'User blocked!' : 'User unblocked!',
-        error: ''
-      });
-      await this.fetchUsers();
-    } catch (err) {
-      this.setState({ error: 'Error updating user', success: '' });
-    }
+toggleBlock = async (id, currentStatus) => {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.put(
+      `http://localhost:5000/users/${id}/block`,
+      { is_blocked: currentStatus === 0 ? 1 : 0 },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    this.setState({ success: currentStatus === 0 ? 'User blocked!' : 'User unblocked!', error: '' });
+    await this.fetchUsers();
+  } catch (err) {
+    this.setState({ error: 'Error updating user', success: '' });
   }
+}
 
   componentDidMount = async () => {
     await this.fetchUsers();
@@ -82,17 +78,16 @@ class ManageUsers extends Component {
                   </td>
                   <td>{user.created_at?.split('T')[0]}</td>
                   <td>
-                    {/* FIX: compare against boolean, not integer */}
-                    <span className={`badge ${!user.is_blocked ? 'active' : 'blocked'}`}>
-                      {!user.is_blocked ? 'Active' : 'Blocked'}
+                    <span className={`badge ${user.is_blocked === 0 ? 'active' : 'blocked'}`}>
+                      {user.is_blocked === 0 ? 'Active' : 'Blocked'}
                     </span>
                   </td>
                   <td>
                     <button
-                      className={!user.is_blocked ? 'block-btn' : 'unblock-btn'}
+                      className={user.is_blocked === 0 ? 'block-btn' : 'unblock-btn'}
                       onClick={() => this.toggleBlock(user.id, user.is_blocked)}
                     >
-                      {!user.is_blocked ? 'Block' : 'Unblock'}
+                      {user.is_blocked === 0 ? 'Block' : 'Unblock'}
                     </button>
                   </td>
                 </tr>
