@@ -29,7 +29,7 @@ class BorrowRecords extends Component {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/borrows/${id}/return`,
+        `https://library-management-system-velocity.onrender.com/borrows/${id}/return`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
