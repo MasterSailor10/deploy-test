@@ -8,15 +8,16 @@ const jwt       = require('jsonwebtoken');
 const { User, Book, Borrow, Request } = require('./initDB');
 
 const app = express();
-app.use(cors({ origin: "http://deploy-test-xi.vercel.app" }));
+app.use(cors({origin: "http://deploy-test-xi.vercel.app"}));
 app.use(express.json());
 
-const MONGO_URI  = process.env.MONGO_URI;
-const JWT_SECRET = process.env.JWT_SECRET;
-const PORT       = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
+const JWT_SECRET = process.env.JWT_SECRET;           //|| 'MY_SECRET_KEY'
+// const MONGO_URI  = process.env.MONGO_URI  || 'mongodb://localhost:27017/librarydb';
+const PORT       = process.env.PORT       || 5000;
 
 // ─────────────────────────────────────
-//  CONNECT TO MONGODB
+//  CONNECT TO MONGODB  
 // ─────────────────────────────────────
 mongoose.connect(MONGO_URI)
   .then(() => {
@@ -31,7 +32,7 @@ mongoose.connect(MONGO_URI)
 // ─────────────────────────────────────
 //  AUTHENTICATE MIDDLEWARE
 // ─────────────────────────────────────
-const authenticateToken = async (req, res, next) => {
+const authenticateToken = (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
     if (!authHeader) return res.status(401).send({ error: 'Access Token Required' });
@@ -40,13 +41,6 @@ const authenticateToken = async (req, res, next) => {
     if (!token) return res.status(401).send({ error: 'Token missing' });
 
     const decoded = jwt.verify(token, JWT_SECRET);
-
-    // FIX: check DB on every request — blocks access immediately when admin blocks a user
-    // without this, a blocked user could keep using their existing JWT until it expires
-    const user = await User.findById(decoded.user_id, 'is_blocked');
-    if (!user)           return res.status(401).send({ error: 'User not found' });
-    if (user.is_blocked) return res.status(403).send({ error: 'Your account has been blocked' });
-
     req.user = decoded;
     next();
   } catch (err) {
@@ -84,7 +78,7 @@ app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user)           return res.status(401).send({ error: 'Email is Incorrect' });
+    if (!user)       return res.status(401).send({ error: 'Email is Incorrect' });
     if (user.is_blocked) return res.status(403).send({ error: 'Your account has been blocked' });
 
     const passwordCorrect = await bcrypt.compare(password, user.password);
@@ -108,6 +102,7 @@ app.post('/login', async (req, res) => {
 app.get('/books', authenticateToken, async (req, res) => {
   try {
     const books = await Book.find();
+    // Return id as numeric-style string — keep _id, frontend uses book.id
     res.send(books.map(b => ({ ...b.toObject(), id: b._id })));
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -127,41 +122,17 @@ app.get('/books/:id', authenticateToken, async (req, res) => {
 app.post('/books', authenticateToken, async (req, res) => {
   const { title, author, category, description, short_description, book_url, cover_url, pages, language, published_year, isbn, total_copies } = req.body;
   try {
-    await Book.create({
-      title, author, category, description, short_description,
-      book_url, cover_url, pages, language, published_year, isbn,
-      total_copies,
-      available_copies: total_copies  // brand new book: all copies available
-    });
+    await Book.create({ title, author, category, description, short_description, book_url, cover_url, pages, language, published_year, isbn, total_copies, available_copies: total_copies });
     res.status(201).send({ message: 'Book added successfully' });
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
 });
 
-// FIX: recalculate available_copies = new total_copies - currently borrowed count
 app.put('/books/:id', authenticateToken, async (req, res) => {
-  const {
-    title, author, category, description, short_description,
-    cover_url, book_url, pages, language, published_year, isbn, total_copies
-  } = req.body;
+  const { title, author, category, description, short_description, cover_url, pages, language, published_year, isbn, total_copies } = req.body;
   try {
-    // Count copies currently borrowed (not yet returned)
-    const borrowedCount = await Borrow.countDocuments({
-      book_id: req.params.id,
-      status: 'borrowed'
-    });
-
-    // available = new total minus what's currently out, minimum 0
-    const available_copies = Math.max(0, Number(total_copies) - borrowedCount);
-
-    await Book.findByIdAndUpdate(req.params.id, {
-      title, author, category, description, short_description,
-      cover_url, book_url, pages, language, published_year, isbn,
-      total_copies: Number(total_copies),
-      available_copies
-    });
-
+    await Book.findByIdAndUpdate(req.params.id, { title, author, category, description, short_description, cover_url, pages, language, published_year, isbn, total_copies });
     res.send({ message: 'Book updated successfully' });
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -236,10 +207,7 @@ app.put('/profile/:id', authenticateToken, async (req, res) => {
     const existing = await User.findOne({ email, _id: { $ne: req.params.id } });
     if (existing) return res.status(400).send({ error: 'Email already taken' });
 
-    const updated = await User.findByIdAndUpdate(
-      req.params.id, { name, email }, { new: true }
-    ).select('name email role');
-
+    const updated = await User.findByIdAndUpdate(req.params.id, { name, email }, { new: true }).select('name email role');
     res.send({ message: 'Profile updated successfully', user: { ...updated.toObject(), id: updated._id } });
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -284,13 +252,13 @@ app.get('/request', authenticateToken, async (req, res) => {
       .sort({ created_at: -1 });
 
     const formatted = records.map(r => ({
-      id:         r._id,
-      user_name:  r.user_id?.name,
-      email:      r.user_id?.email,
-      title:      r.book_id?.title,
-      author:     r.book_id?.author,
-      status:     r.status,
-      created_at: r.created_at,
+      id:          r._id,
+      user_name:   r.user_id?.name,
+      email:       r.user_id?.email,
+      title:       r.book_id?.title,
+      author:      r.book_id?.author,
+      status:      r.status,
+      created_at:  r.created_at,
     }));
     res.send(formatted);
   } catch (err) {
@@ -305,7 +273,7 @@ app.post('/borrows', authenticateToken, async (req, res) => {
   const { user_id, book_id } = req.body;
   try {
     const book = await Book.findById(book_id);
-    if (!book)                      return res.status(404).send({ error: 'Book not found' });
+    if (!book)                    return res.status(404).send({ error: 'Book not found' });
     if (book.available_copies <= 0) return res.status(400).send({ error: 'No copies available' });
 
     const borrow_date = new Date().toISOString().split('T')[0];
@@ -389,9 +357,9 @@ app.get('/borrows/user/:user_id', authenticateToken, async (req, res) => {
 // ─────────────────────────────────────
 app.get('/admin/stats', authenticateToken, async (req, res) => {
   try {
-    const totalBooks     = await Book.countDocuments();
-    const totalUsers     = await User.countDocuments({ role: 'user' });
-    const activeBorrows  = await Borrow.countDocuments({ status: 'borrowed' });
+    const totalBooks    = await Book.countDocuments();
+    const totalUsers    = await User.countDocuments({ role: 'user' });
+    const activeBorrows = await Borrow.countDocuments({ status: 'borrowed' });
     const overdueBorrows = await Borrow.countDocuments({ status: 'overdue' });
 
     const recentBorrowDocs = await Borrow.find()
