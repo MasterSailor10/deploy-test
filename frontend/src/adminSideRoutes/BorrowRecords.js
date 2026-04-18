@@ -16,7 +16,7 @@ class BorrowRecords extends Component {
     try {
       const token = localStorage.getItem('token');
       // FIX: was calling /request (borrow requests only) — changed to /borrows (actual borrow/return records)
-      const response = await axios.get('http://localhost:5000/borrows', {
+      const response = await axios.get('https://library-management-system-velocity.onrender.com/borrows', {
         headers: { Authorization: `Bearer ${token}` }
       });
       this.setState({ records: response.data });
