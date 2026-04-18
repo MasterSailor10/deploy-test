@@ -23,99 +23,119 @@ class ManageBooks extends Component {
     total_copies: '',
     error: '',
     success: '',
-    search1 : '',
-    search2 : '',
+    search1: '',
+    search2: '',
     books2: [],
-    frontendBooks : true,
-    backendBooks : false
+    backendBooks: false
   }
 
-  /////
+  // ─────────────────────────────────────
+  //  API CALLS
+  // ─────────────────────────────────────
 
   fetchBooks = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/books', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    this.setState({ books: response.data });
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-handleAdd = async (e) => {
-  e.preventDefault();
-  const token = localStorage.getItem('token');
-  const { title, author, category, pages, language, published_year, isbn, book_url, cover_url, short_description, description, total_copies, editId } = this.state;
-  const bookData = { title, author, category, pages, language, published_year, isbn, book_url, cover_url, short_description, description, total_copies, total_copies };
-
-  try {
-    if (editId) {
-      await axios.put(`http://localhost:5000/books/${editId}`, bookData, {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/books', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      this.setState({ success: 'Book updated!', error: '' });
-    } else {
-      await axios.post('http://localhost:5000/books', bookData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      this.setState({ success: 'Book added!', error: '' });
+      this.setState({ books: response.data });
+    } catch (err) {
+      console.log(err);
     }
-    this.resetForm();
-    await this.fetchBooks();
-  } catch (err) {
-    this.setState({ error: err.response?.data?.error || 'Something went wrong', success: '' });
   }
-}
 
-handleDelete = async (id) => {
-  try {
+  handleAdd = async (e) => {
+    e.preventDefault();
     const token = localStorage.getItem('token');
-    await axios.delete(`http://localhost:5000/books/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    this.setState({ success: 'Book deleted!', error: '' });
-    await this.fetchBooks();
-  } catch (err) {
-    this.setState({ error: 'Error deleting book', success: '' });
-  }
-}
+    const {
+      title, author, category, pages, language,
+      published_year, isbn, book_url, cover_url,
+      short_description, description, total_copies, editId
+    } = this.state;
 
-////
+    // FIX: removed duplicate total_copies key
+    const bookData = {
+      title, author, category, pages, language,
+      published_year, isbn, book_url, cover_url,
+      short_description, description, total_copies
+    };
+
+    try {
+      if (editId) {
+        await axios.put(`http://localhost:5000/books/${editId}`, bookData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        this.setState({ success: 'Book updated!', error: '' });
+      } else {
+        await axios.post('http://localhost:5000/books', bookData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        this.setState({ success: 'Book added!', error: '' });
+      }
+      this.resetForm();
+      await this.fetchBooks();
+    } catch (err) {
+      this.setState({ error: err.response?.data?.error || 'Something went wrong', success: '' });
+    }
+  }
+
+  handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/books/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      this.setState({ success: 'Book deleted!', error: '' });
+      await this.fetchBooks();
+    } catch (err) {
+      this.setState({ error: 'Error deleting book', success: '' });
+    }
+  }
+
+  fetchBooksOnInput = async (search2) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/filtered?search2=${search2}`);
+      this.setState({ books2: response.data, backendBooks: true });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // ─────────────────────────────────────
+  //  LIFECYCLE
+  // ─────────────────────────────────────
 
   componentDidMount = async () => {
     await this.fetchBooks();
   }
 
+  // ─────────────────────────────────────
+  //  HANDLERS
+  // ─────────────────────────────────────
 
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  // FIX: removed stale-state console.log (was logging value before setState)
   handleSearchAuthorAndBook = (e) => {
-    const {search1} = this.state
-    this.setState({search1 : e.target.value})
-    console.log(search1)
+    this.setState({ search1: e.target.value, backendBooks: false });
   }
 
+  // FIX: reset backendBooks to false when input is cleared
   handleSearchAuthorAndBook2 = (e) => {
     const value = e.target.value;
-    this.setState({ search2: value });
-    console.log(value)
-   
+    this.setState({
+      search2: value,
+      backendBooks: value === '' ? false : this.state.backendBooks
+    });
   }
 
   backendbtn = () => {
-    const {search2} = this.state
-    this.fetchBooksOnInput(search2);  
+    const { search2 } = this.state;
+    this.fetchBooksOnInput(search2);
   }
-
-  fetchBooksOnInput = async (search2) => {
-    const response = await axios.get(`http://localhost:5000/filtered?search2=${search2}`)
-    this.setState({books2 : response.data, backendBooks: true})
-  }
-
 
   handleEdit = (book) => {
     this.setState({
@@ -128,14 +148,13 @@ handleDelete = async (id) => {
       language: book.language,
       published_year: book.published_year,
       isbn: book.isbn,
-      book_url : book.book_url,
+      book_url: book.book_url,
       cover_url: book.cover_url,
       short_description: book.short_description,
       description: book.description,
       total_copies: book.total_copies
     });
   }
-
 
   resetForm = () => {
     this.setState({
@@ -147,30 +166,45 @@ handleDelete = async (id) => {
     });
   }
 
+  // ─────────────────────────────────────
+  //  RENDER
+  // ─────────────────────────────────────
+
   render() {
-    const {search2, books, showForm, editId, title, author, category, pages, language, published_year, isbn, book_url, cover_url, short_description, description, total_copies, error, success } = this.state;
-    const {search1 } = this.state;
+    const {
+      search1, search2, books, books2, backendBooks,
+      showForm, editId, title, author, category, pages,
+      language, published_year, isbn, book_url, cover_url,
+      short_description, description, total_copies, error, success
+    } = this.state;
+
+    // Frontend-filtered books (by title or author)
     const filteredBooks = books.filter(each => {
       const matchTitle  = each.title.toLowerCase().includes(search1.toLowerCase());
       const matchAuthor = each.author.toLowerCase().includes(search1.toLowerCase());
       return matchTitle || matchAuthor;
     });
 
-    const counts = {};
-
-    books.forEach(i => {
-      counts[i.category] = (counts[i.category] || 0) + 1;
-    });
+    // FIX: use backend results when a backend search has been triggered, else frontend filter
+    const displayBooks = backendBooks ? books2 : filteredBooks;
 
     return (
       <div className="admin-layout">
         <AdminSidebar />
         <div className="admin-body">
-          
+
           <div className="admin-header">
             <h2>Manage Books</h2>
-            <input onChange={this.handleSearchAuthorAndBook} placeholder='Enter name and author (Frontend)'/>
-            <input value={search2} onChange={this.handleSearchAuthorAndBook2} placeholder='Enter name and author (Backend)'/>
+            <input
+              value={search1}
+              onChange={this.handleSearchAuthorAndBook}
+              placeholder='Enter name and author (Frontend)'
+            />
+            <input
+              value={search2}
+              onChange={this.handleSearchAuthorAndBook2}
+              placeholder='Enter name and author (Backend)'
+            />
             <button className='add-btn' onClick={this.backendbtn}>Backend</button>
             <button className="add-btn" onClick={() => this.setState({ showForm: true, editId: null })}>
               + Add New Book
@@ -193,7 +227,6 @@ handleDelete = async (id) => {
                   <div>
                     <label>Author</label>
                     <input type="text" name="author" value={author} onChange={this.handleChange} placeholder="Author name" required />
-                    
                   </div>
                 </div>
 
@@ -280,7 +313,8 @@ handleDelete = async (id) => {
               </tr>
             </thead>
             <tbody>
-              {filteredBooks.map(book => (
+              {/* FIX: render displayBooks instead of filteredBooks so backend results show up */}
+              {displayBooks.map(book => (
                 <tr key={book.id}>
                   <td>
                     <img src={book.cover_url} alt={book.title} className="table-cover" />
