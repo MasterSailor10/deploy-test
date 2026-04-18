@@ -27,7 +27,7 @@ toggleBlock = async (id, currentStatus) => {
   try {
     const token = localStorage.getItem('token');
     await axios.put(
-      `http://localhost:5000/users/${id}/block`,
+      `https://library-management-system-velocity.onrender.com/users/${id}/block`,
       { is_blocked: currentStatus === 0 ? 1 : 0 },
       { headers: { Authorization: `Bearer ${token}` } }
     );
